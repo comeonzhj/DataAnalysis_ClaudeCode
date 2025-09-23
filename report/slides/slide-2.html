@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>优惠券策略深度分析报告</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body class="slide-page">
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">优惠券策略深度分析报告</h1>
+            <p class="slide-subtitle">基于退款修正的ROI评估与策略优化建议</p>
+        </div>
+
+        <div class="slide-content">
+            <div class="content-section">
+                <h2 class="section-title">执行摘要</h2>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">54%</div>
+                        <div class="metric-label">平均退款率</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">仅2种</div>
+                        <div class="metric-label">盈利优惠券类型</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">835.9%</div>
+                        <div class="metric-label">四川地区最高ROI</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">39个</div>
+                        <div class="metric-label">高价值细分群体</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <h3 class="section-title">关键发现</h3>
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <div class="insight-icon">📊</div>
+                        <div class="insight-content">
+                            <h4>ROI重计算揭示真相</h4>
+                            <p>考虑退款后，"满100减10"ROI最高(41.0%)，"全场8折"ROI最低(-60.7%)</p>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">🎯</div>
+                        <div class="insight-content">
+                            <h4>用户行为洞察</h4>
+                            <p>全场8折凑单率最高(9.9%)，满100减10对客单价提升效果最佳(12.7%)</p>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">🗺️</div>
+                        <div class="insight-content">
+                            <h4>地区差异显著</h4>
+                            <p>四川地区ROI最高(835.9%)，广东地区ROI相对较低</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.metric-card, .insight-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

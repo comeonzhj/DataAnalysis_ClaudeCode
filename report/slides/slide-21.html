@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动态定价机会</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body class="slide-page">
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">动态定价机会</h1>
+            <p class="slide-subtitle">季节性和地区性定价机会分析</p>
+        </div>
+        <div class="slide-content two-column">
+            <div class="content-section">
+                <h3 class="section-title">季节性价格变化</h3>
+                <div id="seasonal-chart" class="chart-container" style="height: 300px;"></div>
+            </div>
+            <div class="content-section">
+                <h3 class="section-title">地区价格差异</h3>
+                <div id="regional-chart" class="chart-container" style="height: 300px;"></div>
+            </div>
+        </div>
+        <div class="slide-content" style="margin-top: 2rem;">
+            <div class="content-section">
+                <h3 class="section-title">动态定价机会总结</h3>
+                <div class="metrics-grid" style="grid-template-columns: repeat(2, 1fr); gap: 2rem;">
+                    <div class="metric-card">
+                        <div class="metric-value">17.1元</div>
+                        <div class="metric-label">季节性最大差价</div>
+                        <div class="metric-desc">2月vs6月平均价格差异</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">明显</div>
+                        <div class="metric-label">地区差异化机会</div>
+                        <div class="metric-desc">各地区价格承受力差异显著</div>
+                    </div>
+                </div>
+                <div class="insights-grid" style="margin-top: 2rem;">
+                    <div class="insight-card">
+                        <div class="insight-icon">🌡️</div>
+                        <div class="insight-content">
+                            <h4>季节性调价显著</h4>
+                            <p>2月价格最高(81.1元)，6月价格最低(64.0元)，差价达17.1元</p>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">🗺️</div>
+                        <div class="insight-content">
+                            <h4>地区定价策略</h4>
+                            <p>可根据各地区价格承受力制定差异化定价策略</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 季节性定价图表
+        const seasonalChart = echarts.init(document.getElementById('seasonal-chart'));
+        const regionalChart = echarts.init(document.getElementById('regional-chart'));
+
+        // 季节性数据
+        const seasonalOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross'
+                }
+            },
+            legend: {
+                data: ['平均价格', '季节性指数']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                axisLabel: {
+                    interval: 0
+                }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '平均价格(元)',
+                    position: 'left'
+                },
+                {
+                    type: 'value',
+                    name: '季节性指数',
+                    position: 'right'
+                }
+            ],
+            series: [
+                {
+                    name: '平均价格',
+                    type: 'line',
+                    data: [75.5, 81.1, 64.2, 67.5, 70.2, 64.0],
+                    smooth: true,
+                    itemStyle: {
+                        color: '#3b82f6'
+                    },
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: '最大值'},
+                            {type: 'min', name: '最小值'}
+                        ]
+                    }
+                },
+                {
+                    name: '季节性指数',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: [1.07, 1.15, 0.91, 0.96, 1.00, 0.91],
+                    smooth: true,
+                    itemStyle: {
+                        color: '#10b981'
+                    }
+                }
+            ]
+        };
+
+        // 地区价格差异数据
+        const regionalOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'value',
+                name: '价格承受力指数'
+            },
+            yAxis: {
+                type: 'category',
+                data: ['新疆', '云南', '广东', '江苏', '浙江', '北京', '上海', '天津'],
+                axisLabel: {
+                    interval: 0
+                }
+            },
+            series: [{
+                name: '价格承受力',
+                type: 'bar',
+                data: [0.15, 0.15, 0.49, 0.65, 0.68, 1.68, 0.91, 4.69],
+                itemStyle: {
+                    color: function(params) {
+                        const value = params.value;
+                        if (value > 2) return '#ef4444';
+                        if (value > 1) return '#f59e0b';
+                        if (value > 0.5) return '#10b981';
+                        return '#3b82f6';
+                    }
+                }
+            }]
+        };
+
+        seasonalChart.setOption(seasonalOption);
+        regionalChart.setOption(regionalOption);
+
+        // 响应式处理
+        window.addEventListener('resize', function() {
+            seasonalChart.resize();
+            regionalChart.resize();
+        });
+    </script>
+</body>
+</html>

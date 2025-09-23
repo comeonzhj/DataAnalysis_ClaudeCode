@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据分析报告 - 幻灯片展示</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 左侧缩略图面板 -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h1>数据分析报告</h1>
+                <div class="slide-count">
+                    <span id="slide-counter">0 张幻灯片</span>
+                </div>
+            </div>
+            <div class="thumbnails-container" id="thumbnails">
+                <!-- 缩略图将通过 JavaScript 动态加载 -->
+            </div>
+        </div>
+
+        <!-- 右侧内容区域 -->
+        <div class="main-content">
+            <div class="slide-container">
+                <iframe 
+                    id="slide-frame" 
+                    class="slide-iframe"
+                    src="slides/slide-1.html"
+                    frameborder="0">
+                </iframe>
+            </div>
+            
+            <!-- 导航控制 -->
+            <div class="navigation">
+                <button id="prev-btn" class="nav-btn" disabled>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15,18 9,12 15,6"></polyline>
+                    </svg>
+                    上一页
+                </button>
+                <span id="page-indicator" class="page-indicator">1 / 2</span>
+                <button id="next-btn" class="nav-btn">
+                    下一页
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9,18 15,12 9,6"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>价格弹性分析</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body class="slide-page">
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">价格弹性分析</h1>
+            <p class="slide-subtitle">34种商品价格弹性系数分布</p>
+        </div>
+        <div class="slide-content two-column">
+            <div class="content-section">
+                <h3 class="section-title">价格弹性分布</h3>
+                <div id="elasticity-chart" class="chart-container" style="height: 350px;"></div>
+            </div>
+            <div class="content-section">
+                <h3 class="section-title">关键洞察</h3>
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <div class="insight-icon">📊</div>
+                        <div class="insight-content">
+                            <h4>平均弹性系数-0.229</h4>
+                            <p>所有商品均缺乏弹性，价格调整对销量影响有限</p>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">💡</div>
+                        <div class="insight-content">
+                            <h4>价格策略空间</h4>
+                            <p>缺乏弹性意味着适度提价不会显著影响销量</p>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">🎯</div>
+                        <div class="insight-content">
+                            <h4>差异化定价机会</h4>
+                            <p>可根据不同商品特性制定差异化价格策略</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 价格弹性图表
+        const elasticityChart = echarts.init(document.getElementById('elasticity-chart'));
+
+        // 模拟价格弹性数据
+        const elasticityData = [
+            {name: 'SKU043', value: -0.1}, {name: 'SKU009', value: -0.1}, {name: 'SKU044', value: -0.1},
+            {name: 'SKU023', value: -0.1}, {name: 'SKU012', value: -0.1}, {name: 'SKU013', value: -0.5},
+            {name: 'SKU019', value: -0.1}, {name: 'SKU045', value: -0.1}, {name: 'SKU026', value: -0.5},
+            {name: 'SKU025', value: -0.2}, {name: 'SKU018', value: -0.3}, {name: 'SKU042', value: -0.15},
+            {name: 'SKU007', value: -0.25}, {name: 'SKU035', value: -0.2}, {name: 'SKU001', value: -0.3},
+            {name: 'SKU015', value: -0.1}, {name: 'SKU028', value: -0.4}, {name: 'SKU033', value: -0.2},
+            {name: 'SKU021', value: -0.25}, {name: 'SKU002', value: -0.35}, {name: 'SKU006', value: -0.15},
+            {name: 'SKU039', value: -0.2}, {name: 'SKU048', value: -0.3}, {name: 'SKU017', value: -0.1},
+            {name: 'SKU030', value: -0.25}, {name: 'SKU037', value: -0.2}, {name: 'SKU010', value: -0.4},
+            {name: 'SKU027', value: -0.15}, {name: 'SKU041', value: -0.3}, {name: 'SKU003', value: -0.2},
+            {name: 'SKU032', value: -0.25}, {name: 'SKU022', value: -0.1}, {name: 'SKU038', value: -0.35},
+            {name: 'SKU049', value: -0.2}
+        ];
+
+        const elasticityOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                },
+                formatter: function(params) {
+                    return `${params[0].name}<br/>弹性系数: ${params[0].value}`;
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'value',
+                name: '价格弹性系数',
+                nameLocation: 'middle',
+                nameGap: 25,
+                min: -0.6,
+                max: 0,
+                axisLabel: {
+                    formatter: '{value}'
+                }
+            },
+            yAxis: {
+                type: 'category',
+                data: elasticityData.map(item => item.name).slice(0, 15),
+                axisLabel: {
+                    interval: 0
+                }
+            },
+            series: [{
+                name: '价格弹性',
+                type: 'bar',
+                data: elasticityData.map(item => item.value).slice(0, 15),
+                itemStyle: {
+                    color: function(params) {
+                        const value = params.value;
+                        if (value > -0.2) return '#10b981';
+                        if (value > -0.4) return '#f59e0b';
+                        return '#ef4444';
+                    }
+                },
+                markLine: {
+                    data: [{
+                        type: 'average',
+                        name: '平均值'
+                    }],
+                    label: {
+                        formatter: '平均值: {c}'
+                    }
+                }
+            }]
+        };
+
+        elasticityChart.setOption(elasticityOption);
+
+        // 响应式处理
+        window.addEventListener('resize', function() {
+            elasticityChart.resize();
+        });
+    </script>
+</body>
+</html>

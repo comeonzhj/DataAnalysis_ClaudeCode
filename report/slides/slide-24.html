@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实施建议与总结</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body class="slide-page">
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">实施建议与总结</h1>
+            <p class="slide-subtitle">分阶段实施计划和注意事项</p>
+        </div>
+        <div class="slide-content two-row">
+            <div class="content-section">
+                <h3 class="section-title">分阶段实施路线图</h3>
+                <div id="roadmap-chart" class="chart-container" style="height: 250px;"></div>
+            </div>
+            <div class="content-section">
+                <h3 class="section-title">关键实施要点</h3>
+                <div class="insights-grid" style="grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                    <div class="insight-card">
+                        <div class="insight-icon">1️⃣</div>
+                        <div class="insight-content">
+                            <h4>第一阶段：基础优化（1-2个月）</h4>
+                            <ul>
+                                <li>调整商品定价至最优区间（60-100元）</li>
+                                <li>推广整数定价策略</li>
+                                <li>实施季节性调价机制</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">2️⃣</div>
+                        <div class="insight-content">
+                            <h4>第二阶段：差异化定价（3-4个月）</h4>
+                            <ul>
+                                <li>实施地区差异化定价</li>
+                                <li>优化高价值商品定价</li>
+                                <li>建立动态定价系统</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">3️⃣</div>
+                        <div class="insight-content">
+                            <h4>第三阶段：个性化策略（5-6个月）</h4>
+                            <ul>
+                                <li>基于用户画像的个性化定价</li>
+                                <li>实时竞价优化</li>
+                                <li>AI驱动的价格优化</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="insight-card warning">
+                        <div class="insight-icon">⚠️</div>
+                        <div class="insight-content">
+                            <h4>注意事项</h4>
+                            <ul>
+                                <li>监控价格调整对销量的实时影响</li>
+                                <li>关注竞争对手价格反应</li>
+                                <li>保持价格策略的灵活性</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-content" style="margin-top: 2rem;">
+            <div class="content-section" style="background-color: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 1.5rem;">
+                <h3 style="color: #0ea5e9; margin-bottom: 1rem;">核心结论</h3>
+                <p style="font-size: 1.1rem; line-height: 1.6; color: #1e293b;">
+                    通过系统的定价策略分析，我们识别了多个优化机会。建议优先实施整数定价和中价区间聚焦策略，
+                    预期可带来5%以上的收益提升。个性化定价策略具有20%的最大收益潜力，应作为长期目标分阶段实施。
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 实施路线图图表
+        const roadmapChart = echarts.init(document.getElementById('roadmap-chart'));
+
+        const roadmapOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                data: ['预期收益提升', '实施进度']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['第1个月', '第2个月', '第3个月', '第4个月', '第5个月', '第6个月'],
+                axisLabel: {
+                    interval: 0
+                }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '收益提升(%)',
+                    position: 'left',
+                    max: 25
+                },
+                {
+                    type: 'value',
+                    name: '完成度(%)',
+                    position: 'right',
+                    max: 100
+                }
+            ],
+            series: [
+                {
+                    name: '预期收益提升',
+                    type: 'bar',
+                    data: [2, 5, 8, 12, 16, 20],
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            {offset: 0, color: '#10b981'},
+                            {offset: 1, color: '#059669'}
+                        ])
+                    }
+                },
+                {
+                    name: '实施进度',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: [20, 40, 60, 75, 90, 100],
+                    smooth: true,
+                    itemStyle: {
+                        color: '#3b82f6'
+                    },
+                    markLine: {
+                        data: [{
+                            type: 'average',
+                            name: '平均进度'
+                        }]
+                    }
+                }
+            ]
+        };
+
+        roadmapChart.setOption(roadmapOption);
+
+        // 响应式处理
+        window.addEventListener('resize', function() {
+            roadmapChart.resize();
+        });
+    </script>
+</body>
+</html>

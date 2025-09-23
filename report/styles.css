@@ -1,0 +1,626 @@
+/* 重置样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 根变量 - shadcn/ui 风格调色板 */
+:root {
+    /* 中性色调 */
+    --background: #ffffff;
+    --foreground: #0f172a;
+    --card: #ffffff;
+    --card-foreground: #0f172a;
+    --popover: #ffffff;
+    --popover-foreground: #0f172a;
+    
+    /* 边框和分割线 */
+    --border: #e2e8f0;
+    --input: #e2e8f0;
+    
+    /* 主要色调 - 使用灰色系替代蓝色 */
+    --primary: #1e293b;
+    --primary-foreground: #f8fafc;
+    
+    /* 次要色调 */
+    --secondary: #f1f5f9;
+    --secondary-foreground: #0f172a;
+    
+    /* 静音色调 */
+    --muted: #f8fafc;
+    --muted-foreground: #64748b;
+    
+    /* 强调色调 */
+    --accent: #f1f5f9;
+    --accent-foreground: #0f172a;
+    
+    /* 破坏性操作 */
+    --destructive: #ef4444;
+    --destructive-foreground: #f8fafc;
+    
+    /* 圆角 */
+    --radius: 0.25rem;
+    
+    /* 字体 */
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #020617;
+        --foreground: #f8fafc;
+        --card: #020617;
+        --card-foreground: #f8fafc;
+        --popover: #020617;
+        --popover-foreground: #f8fafc;
+        --border: #1e293b;
+        --input: #1e293b;
+        --primary: #f8fafc;
+        --primary-foreground: #0f172a;
+        --secondary: #1e293b;
+        --secondary-foreground: #f8fafc;
+        --muted: #1e293b;
+        --muted-foreground: #94a3b8;
+        --accent: #1e293b;
+        --accent-foreground: #f8fafc;
+    }
+}
+
+/* 基础样式 */
+body {
+    font-family: var(--font-sans);
+    background-color: var(--background);
+    color: var(--foreground);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 主容器 */
+.app-container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* 侧边栏 */
+.sidebar {
+    width: 280px;
+    background-color: var(--muted);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.sidebar-header {
+    padding: 1.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+    background-color: var(--card);
+}
+
+.sidebar-header h1 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--foreground);
+    margin-bottom: 0.5rem;
+}
+
+.slide-count {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+}
+
+/* 缩略图容器 */
+.thumbnails-container {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* 缩略图项 */
+.thumbnail-item {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    overflow: hidden;
+    position: relative;
+    /* 确保缩略图保持16:9比例，不被压缩 */
+    flex-shrink: 0;
+}
+
+.thumbnail-item:hover {
+    border-color: var(--primary);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.thumbnail-item.active {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(30, 41, 59, 0.1);
+}
+
+.thumbnail-preview {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: none;
+    border-radius: var(--radius);
+    pointer-events: none;
+    transform: scale(0.95);
+    transform-origin: center;
+    /* 确保iframe不被压缩 */
+    min-height: 120px;
+}
+
+.thumbnail-title {
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--foreground);
+    border-top: 1px solid var(--border);
+    background-color: var(--card);
+}
+
+/* 主内容区 */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background);
+}
+
+/* 幻灯片容器 */
+.slide-container {
+    flex: 1;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* 确保不出现滚动条 */
+}
+
+.slide-iframe {
+    /* 设置为标准16:9比例的虚拟尺寸 */
+    width: 1600px;
+    height: 900px;
+    /* 初始缩放，会被JavaScript动态调整 */
+    transform-origin: center center;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background-color: var(--card);
+    /* 确保iframe内容不会溢出 */
+    overflow: hidden;
+}
+
+/* 导航控制 */
+.navigation {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    background-color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.nav-btn:hover:not(:disabled) {
+    background-color: var(--accent);
+    border-color: var(--primary);
+}
+
+.nav-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-indicator {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    font-weight: 500;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: 200px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    
+    .thumbnails-container {
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 0.75rem;
+    }
+    
+    .thumbnail-item {
+        min-width: 160px;
+        flex-shrink: 0;
+    }
+    
+    .slide-container {
+        padding: 1rem;
+    }
+    
+    .slide-iframe {
+        /* 移动端保持相同的虚拟尺寸，通过JavaScript缩放 */
+        width: 1600px;
+        height: 900px;
+    }
+    
+    .navigation {
+        padding: 0.75rem 1rem;
+    }
+}
+
+/* 滚动条样式 */
+.thumbnails-container::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.thumbnails-container::-webkit-scrollbar-track {
+    background: var(--muted);
+}
+
+.thumbnails-container::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+}
+
+.thumbnails-container::-webkit-scrollbar-thumb:hover {
+    background: var(--muted-foreground);
+}
+
+/* 加载状态 */
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+}
+
+/* 错误状态 */
+.error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--destructive);
+    font-size: 0.875rem;
+    padding: 2rem;
+    text-align: center;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.thumbnail-item {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* 打印样式 */
+@media print {
+    .sidebar,
+    .navigation {
+        display: none;
+    }
+    
+    .main-content {
+        width: 100%;
+    }
+    
+    .slide-iframe {
+        width: 100%;
+        height: 100vh;
+        max-width: none;
+        max-height: none;
+        border: none;
+    }
+}
+
+/* ========== 幻灯片页面通用样式 ========== */
+
+/* 幻灯片基础样式 - 在每个幻灯片页面的 body 上应用 */
+.slide-page {
+    font-family: var(--font-sans);
+    background-color: var(--background);
+    color: var(--foreground);
+    padding: 2rem;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    /* 确保在iframe内正确显示 */
+    box-sizing: border-box;
+    min-height: 100vh;
+}
+
+/* 幻灯片容器 */
+.slide {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* 幻灯片头部 */
+.slide-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.slide-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.slide-subtitle {
+    font-size: 1.125rem;
+    color: var(--muted-foreground);
+    font-weight: 400;
+}
+
+/* 幻灯片内容区 */
+.slide-content {
+    flex: 1;
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* 内容区域 */
+.content-section {
+    background-color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+/* 指标网格 */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.metric-card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: center;
+}
+
+.metric-value {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.25rem;
+}
+
+.metric-label {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+}
+
+/* 图表容器 */
+.chart-container {
+    width: 100%;
+    height: 300px;
+}
+
+.chart-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+/* 洞察网格 */
+.insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.insight-card {
+    background-color: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+}
+
+.insight-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.insight-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.insight-description {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+}
+
+/* 幻灯片页脚 */
+.slide-footer {
+    text-align: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.slide-number {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+}
+
+/* 幻灯片布局变体 */
+.slide-content.two-column {
+    grid-template-columns: 1fr 1fr;
+}
+
+.slide-content.three-column {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.slide-content.two-row {
+    grid-template-rows: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.slide-content.full-width {
+    grid-template-columns: 1fr;
+}
+
+/* 图表行布局 */
+.chart-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.chart-section {
+    background-color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-section .chart-container {
+    flex: 1;
+    min-height: 200px;
+}
+
+/* 全宽内容区 */
+.insights-section {
+    grid-column: 1 / -1;
+    background-color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+}
+
+.insights-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* 幻灯片响应式设计 */
+@media (max-width: 768px) {
+    .slide-page {
+        padding: 1rem;
+    }
+    
+    .slide-content,
+    .slide-content.two-column,
+    .slide-content.three-column,
+    .chart-row {
+        grid-template-columns: 1fr !important;
+        gap: 1rem;
+    }
+    
+    .slide-title {
+        font-size: 2rem;
+    }
+    
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .insights-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 中等屏幕响应式 */
+@media (max-width: 1200px) and (min-width: 769px) {
+    .slide-page {
+        padding: 1.5rem;
+    }
+    
+    .slide-title {
+        font-size: 2.25rem;
+    }
+    
+    .slide-content.three-column {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+}
+
+/* 超大屏幕优化 */
+@media (min-width: 1400px) {
+    .slide-page {
+        padding: 2.5rem;
+    }
+    
+    .chart-container {
+        height: 350px;
+    }
+}

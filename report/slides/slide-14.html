@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>竞争环境分析</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body class="slide-page">
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">竞争环境分析</h1>
+            <p class="slide-subtitle">市场饱和度与商业机会</p>
+        </div>
+        <div class="slide-content two-column">
+            <div class="content-section">
+                <h2 class="section-title">市场分类分布</h2>
+                <div id="marketPositioningChart" class="chart-container"></div>
+            </div>
+            <div class="content-section">
+                <h2 class="section-title">商业机会TOP5</h2>
+                <div class="insights-grid">
+                    <div class="insight-card success">
+                        <h3>1. 浙江</h3>
+                        <p>增长潜力大，市场份额持续提升</p>
+                    </div>
+                    <div class="insight-card success">
+                        <h3>2. 香港</h3>
+                        <p>获客成本最低，ROI潜力高</p>
+                    </div>
+                    <div class="insight-card success">
+                        <h3>3. 上海</h3>
+                        <p>高价值市场，用户粘性强</p>
+                    </div>
+                    <div class="insight-card success">
+                        <h3>4. 福建</h3>
+                        <p>中等规模市场，增长稳定</p>
+                    </div>
+                    <div class="insight-card success">
+                        <h3>5. 广东</h3>
+                        <p>大市场规模，机会与挑战并存</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 市场定位图表
+        const marketPositioningChart = echarts.init(document.getElementById('marketPositioningChart'));
+
+        const marketData = [
+            {name: '现金牛市场', value: 1, color: '#10b981'},
+            {name: '瘦狗市场', value: 29, color: '#64748b'},
+            {name: '问题市场', value: 3, color: '#f59e0b'},
+            {name: '明星市场', value: 0, color: '#3b82f6'}
+        ];
+
+        const marketPositioningOption = {
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}: {c}个地区 ({d}%)'
+            },
+            series: [
+                {
+                    name: '市场分类',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    avoidLabelOverlap: false,
+                    itemStyle: {
+                        borderRadius: 10,
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: true,
+                        formatter: '{b}\n{c}个地区'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: 16,
+                            fontWeight: 'bold'
+                        }
+                    },
+                    data: marketData.map(item => ({
+                        name: item.name,
+                        value: item.value,
+                        itemStyle: { color: item.color }
+                    }))
+                }
+            ]
+        };
+
+        marketPositioningChart.setOption(marketPositioningOption);
+
+        // 响应式处理
+        window.addEventListener('resize', function() {
+            marketPositioningChart.resize();
+        });
+    </script>
+</body>
+</html>

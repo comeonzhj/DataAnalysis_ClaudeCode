@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>策略优化建议</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body class="slide-page">
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">策略优化建议</h1>
+            <p class="slide-subtitle">增长预测与资源分配优化</p>
+        </div>
+        <div class="slide-content two-row">
+            <div class="content-section">
+                <h2 class="section-title">最优预算分配</h2>
+                <div id="budgetAllocationChart" class="chart-container"></div>
+            </div>
+            <div class="content-section">
+                <h2 class="section-title">增长预测与建议</h2>
+                <div class="metrics-grid">
+                    <div class="metric-card success">
+                        <h3>最高增长预测</h3>
+                        <p class="metric-value">+92.9%</p>
+                        <p class="metric-desc">四川地区</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3>重点投资地区</h3>
+                        <p class="metric-value">北京</p>
+                        <p class="metric-desc">分配预算6,621元</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3>次重点投资</h3>
+                        <p class="metric-value">上海</p>
+                        <p class="metric-desc">分配预算6,384元</p>
+                    </div>
+                    <div class="metric-card">
+                        <h3>潜力地区</h3>
+                        <p class="metric-value">浙江</p>
+                        <p class="metric-desc">分配预算5,714元</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 预算分配图表
+        const budgetAllocationChart = echarts.init(document.getElementById('budgetAllocationChart'));
+
+        const budgetData = [
+            {name: '北京', value: 6620.89, roi: 866.58},
+            {name: '上海', value: 6384.44, roi: 682.50},
+            {name: '浙江', value: 5714.48, roi: 427.07},
+            {name: '福建', value: 5624.80, roi: 375.79},
+            {name: '山东', value: 4793.07, roi: 217.80},
+            {name: '四川', value: 4498.33, roi: 72.76},
+            {name: '江苏', value: 4261.18, roi: 171.65},
+            {name: '广东', value: 3644.39, roi: 108.81}
+        ];
+
+        const budgetAllocationOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross'
+                },
+                formatter: function(params) {
+                    let result = params[0].name + '<br/>';
+                    params.forEach(param => {
+                        if (param.seriesName === '预算分配') {
+                            result += param.marker + param.seriesName + ': ￥' + param.value.toFixed(2) + '<br/>';
+                        } else {
+                            result += param.marker + param.seriesName + ': ' + param.value.toFixed(2) + '%<br/>';
+                        }
+                    });
+                    return result;
+                }
+            },
+            legend: {
+                data: ['预算分配', '预期ROI']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                top: '15%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: budgetData.map(item => item.name),
+                axisLabel: {
+                    interval: 0,
+                    rotate: 45
+                }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '预算金额(￥)',
+                    position: 'left'
+                },
+                {
+                    type: 'value',
+                    name: '预期ROI(%)',
+                    position: 'right'
+                }
+            ],
+            series: [
+                {
+                    name: '预算分配',
+                    type: 'bar',
+                    data: budgetData.map(item => item.value),
+                    itemStyle: {
+                        color: '#3b82f6'
+                    }
+                },
+                {
+                    name: '预期ROI',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: budgetData.map(item => item.roi),
+                    smooth: true,
+                    itemStyle: {
+                        color: '#10b981'
+                    },
+                    markLine: {
+                        data: [
+                            {type: 'average', name: '平均ROI'}
+                        ]
+                    }
+                }
+            ]
+        };
+
+        budgetAllocationChart.setOption(budgetAllocationOption);
+
+        // 响应式处理
+        window.addEventListener('resize', function() {
+            budgetAllocationChart.resize();
+        });
+    </script>
+</body>
+</html>
