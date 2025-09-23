@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>定价优化策略</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body class="slide-page">
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">定价优化策略</h1>
+            <p class="slide-subtitle">具体的价格调整建议和预期效果</p>
+        </div>
+        <div class="slide-content two-column">
+            <div class="content-section">
+                <h3 class="section-title">策略优先级矩阵</h3>
+                <div id="strategy-matrix" class="chart-container" style="height: 350px;"></div>
+            </div>
+            <div class="content-section">
+                <h3 class="section-title">预期收益提升</h3>
+                <div class="metrics-grid" style="grid-template-columns: 1fr; gap: 1rem;">
+                    <div class="metric-card success">
+                        <div class="metric-value">5%+</div>
+                        <div class="metric-label">高优先级策略预期收益</div>
+                        <div class="metric-desc">实施优先级最高的策略组合</div>
+                    </div>
+                    <div class="metric-card highlight">
+                        <div class="metric-value">20%</div>
+                        <div class="metric-label">个性化策略最大收益</div>
+                        <div class="metric-desc">基于地区和用户特征的个性化定价</div>
+                    </div>
+                </div>
+                <div class="insights-grid" style="margin-top: 2rem;">
+                    <div class="insight-card">
+                        <div class="insight-icon">🎯</div>
+                        <div class="insight-content">
+                            <h4>聚焦高价值策略</h4>
+                            <p>优先实施ROI提升明显的核心策略</p>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">📈</div>
+                        <div class="insight-content">
+                            <h4>分阶段实施</h4>
+                            <p>根据策略影响力和实施难度分阶段推进</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 策略优先级矩阵图表
+        const strategyChart = echarts.init(document.getElementById('strategy-matrix'));
+
+        const strategyOption = {
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    const data = params.data;
+                    return `${data.name}<br/>影响力: ${data.value[0]}<br/>实施难度: ${data.value[1]}<br/>预期收益: ${data.value[2]}%`;
+                }
+            },
+            legend: {
+                data: ['高优先级', '中优先级', '低优先级']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'value',
+                name: '实施难度',
+                min: 0,
+                max: 10,
+                axisLabel: {
+                    formatter: '{value}'
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: '影响力',
+                min: 0,
+                max: 10
+            },
+            series: [
+                {
+                    name: '高优先级',
+                    type: 'scatter',
+                    symbolSize: function(data) {
+                        return data[2] * 4;
+                    },
+                    data: [
+                        {name: '整数定价优化', value: [3, 8, 15]},
+                        {name: '中价区间聚焦', value: [4, 9, 20]},
+                        {name: '季节性调价', value: [5, 7, 12]}
+                    ],
+                    itemStyle: {
+                        color: '#10b981'
+                    }
+                },
+                {
+                    name: '中优先级',
+                    type: 'scatter',
+                    symbolSize: function(data) {
+                        return data[2] * 4;
+                    },
+                    data: [
+                        {name: '地区差异化', value: [6, 6, 10]},
+                        {name: '心理定价', value: [7, 5, 8]},
+                        {name: '竞争定价', value: [6, 7, 9]}
+                    ],
+                    itemStyle: {
+                        color: '#f59e0b'
+                    }
+                },
+                {
+                    name: '低优先级',
+                    type: 'scatter',
+                    symbolSize: function(data) {
+                        return data[2] * 4;
+                    },
+                    data: [
+                        {name: '超高价优化', value: [8, 4, 5]},
+                        {name: '低价扩张', value: [7, 3, 4]},
+                        {name: '动态实时定价', value: [9, 6, 7]}
+                    ],
+                    itemStyle: {
+                        color: '#64748b'
+                    }
+                }
+            ]
+        };
+
+        // 添加象限分割线
+        strategyOption.series.push({
+            name: '分割线',
+            type: 'line',
+            data: [[0, 5], [10, 5]],
+            lineStyle: {
+                color: '#e2e8f0',
+                type: 'dashed'
+            },
+            symbol: 'none'
+        }, {
+            name: '分割线2',
+            type: 'line',
+            data: [[5, 0], [5, 10]],
+            lineStyle: {
+                color: '#e2e8f0',
+                type: 'dashed'
+            },
+            symbol: 'none'
+        });
+
+        strategyChart.setOption(strategyOption);
+
+        // 响应式处理
+        window.addEventListener('resize', function() {
+            strategyChart.resize();
+        });
+    </script>
+</body>
+</html>

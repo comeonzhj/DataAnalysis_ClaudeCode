@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>价格区间效应分析</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body class="slide-page">
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">价格区间效应分析</h1>
+            <p class="slide-subtitle">不同价格区间的销量和效果对比</p>
+        </div>
+        <div class="slide-content two-column">
+            <div class="content-section">
+                <h3 class="section-title">各价格区间表现</h3>
+                <div id="price-range-chart" class="chart-container" style="height: 350px;"></div>
+            </div>
+            <div class="content-section">
+                <h3 class="section-title">最优价格区间</h3>
+                <div class="metrics-grid" style="grid-template-columns: 1fr; gap: 1rem;">
+                    <div class="metric-card highlight">
+                        <div class="metric-value">60-100元</div>
+                        <div class="metric-label">最优价格区间</div>
+                        <div class="metric-desc">综合得分最高，转化率49.1%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">80-90元</div>
+                        <div class="metric-label">价格甜蜜点</div>
+                        <div class="metric-desc">用户接受度最高的价格段</div>
+                    </div>
+                    <div class="metric-card warning">
+                        <div class="metric-value">60.9%</div>
+                        <div class="metric-label">超高价商品退款率</div>
+                        <div class="metric-desc">300元以上商品退款风险高</div>
+                    </div>
+                </div>
+                <div class="insights-grid" style="margin-top: 2rem;">
+                    <div class="insight-card">
+                        <div class="insight-icon">💰</div>
+                        <div class="insight-content">
+                            <h4>中价区间优势显著</h4>
+                            <p>60-100元区间订单占比38.1%，销售额占比48.5%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 价格区间表现图表
+        const priceRangeChart = echarts.init(document.getElementById('price-range-chart'));
+
+        const priceRangeData = {
+            ranges: ['超低价\n(0-25)', '低价\n(25-40)', '中低价\n(40-60)', '中价\n(60-100)', '高价\n(150-300)', '超高价\n(300+)'],
+            orders: [174, 173, 226, 381, 10, 36],
+            conversion: [44.3, 48.0, 42.0, 49.1, 40.0, 38.9],
+            refund: [55.7, 52.0, 58.0, 50.9, 60.0, 61.1],
+            revenue: [65.6, 94.0, 130.5, 249.8, 563.0, 1061.2]
+        };
+
+        const priceRangeOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross'
+                }
+            },
+            legend: {
+                data: ['订单量', '转化率', '退款率', '平均订单金额']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: priceRangeData.ranges,
+                axisLabel: {
+                    interval: 0
+                }
+            },
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '订单量',
+                    position: 'left',
+                    axisLabel: {
+                        formatter: '{value}'
+                    }
+                },
+                {
+                    type: 'value',
+                    name: '百分比 / 金额',
+                    position: 'right',
+                    axisLabel: {
+                        formatter: '{value}'
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: '订单量',
+                    type: 'bar',
+                    data: priceRangeData.orders,
+                    itemStyle: {
+                        color: '#3b82f6'
+                    }
+                },
+                {
+                    name: '转化率',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: priceRangeData.conversion,
+                    itemStyle: {
+                        color: '#10b981'
+                    }
+                },
+                {
+                    name: '退款率',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: priceRangeData.refund,
+                    itemStyle: {
+                        color: '#ef4444'
+                    }
+                },
+                {
+                    name: '平均订单金额',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    data: priceRangeData.revenue,
+                    itemStyle: {
+                        color: '#f59e0b'
+                    }
+                }
+            ]
+        };
+
+        priceRangeChart.setOption(priceRangeOption);
+
+        // 响应式处理
+        window.addEventListener('resize', function() {
+            priceRangeChart.resize();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>盈亏分析 - 各优惠券类型的盈利情况</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body class="slide-page">
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">盈亏分析</h1>
+            <p class="slide-subtitle">各优惠券类型的成本收益分析</p>
+        </div>
+
+        <div class="slide-content">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div class="content-section">
+                    <h2 class="section-title">成本收益对比</h2>
+                    <div class="chart-container" id="costBenefitChart" style="height: 350px;"></div>
+                </div>
+
+                <div class="content-section">
+                    <h2 class="section-title">成本收益率排名</h2>
+                    <div class="chart-container" id="profitabilityChart" style="height: 350px;"></div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h3 class="section-title">盈亏分析总结</h3>
+                <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="metric-card" style="background-color: #ecfdf5; border-color: #10b981;">
+                        <div class="metric-value" style="color: #10b981;">盈利</div>
+                        <div class="metric-label">满100减10</div>
+                        <div style="font-size: 0.9rem; color: #6b7280; margin-top: 0.5rem;">净收益: ¥4,911</div>
+                    </div>
+                    <div class="metric-card" style="background-color: #ecfdf5; border-color: #10b981;">
+                        <div class="metric-value" style="color: #10b981;">盈利</div>
+                        <div class="metric-label">免邮券</div>
+                        <div style="font-size: 0.9rem; color: #6b7280; margin-top: 0.5rem;">净收益: ¥5,383</div>
+                    </div>
+                    <div class="metric-card" style="background-color: #fef2f2; border-color: #ef4444;">
+                        <div class="metric-value" style="color: #ef4444;">亏损</div>
+                        <div class="metric-label">全场8折</div>
+                        <div style="font-size: 0.9rem; color: #6b7280; margin-top: 0.5rem;">净收益: ¥2,869</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 成本收益对比图表
+        const costBenefitChart = echarts.init(document.getElementById('costBenefitChart'));
+
+        const costBenefitOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                data: ['优惠券成本', '净收益']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: ['满100减10', '免邮券', '无优惠', '新人专享券', '全场8折']
+            },
+            yAxis: {
+                type: 'value',
+                name: '金额 (元)'
+            },
+            series: [
+                {
+                    name: '优惠券成本',
+                    type: 'bar',
+                    data: [930, 1020, 0, 1260, 2980],
+                    itemStyle: { color: '#f59e0b' }
+                },
+                {
+                    name: '净收益',
+                    type: 'bar',
+                    data: [4911, 5383, 4140, 3493, 2869],
+                    itemStyle: { color: '#10b981' }
+                }
+            ]
+        };
+
+        costBenefitChart.setOption(costBenefitOption);
+
+        // 成本收益率排名图表
+        const profitabilityChart = echarts.init(document.getElementById('profitabilityChart'));
+
+        const profitabilityData = [
+            { name: '无优惠', value: null },
+            { name: '满100减10', value: 5.28 },
+            { name: '免邮券', value: 5.28 },
+            { name: '新人专享券', value: 2.77 },
+            { name: '全场8折', value: 0.96 }
+        ];
+
+        const profitabilityOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                },
+                formatter: function(params) {
+                    const data = params[0];
+                    return `<div style="padding: 10px;">
+                        <strong>${data.name}</strong><br/>
+                        成本收益率: ${data.value ? data.value.toFixed(2) : '∞'}:1<br/>
+                        ${data.value ? `每投入1元获得${data.value.toFixed(2)}元收益` : '无优惠券成本'}
+                    </div>`;
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: profitabilityData.map(d => d.name),
+                axisLabel: {
+                    interval: 0,
+                    rotate: 45
+                }
+            },
+            yAxis: {
+                type: 'value',
+                name: '成本收益率',
+                axisLabel: {
+                    formatter: '{value}:1'
+                }
+            },
+            series: [{
+                name: '成本收益率',
+                type: 'bar',
+                data: profitabilityData.map(d => ({
+                    value: d.value,
+                    itemStyle: {
+                        color: d.value === null ? '#94a3b8' :
+                            d.value > 4 ? '#10b981' :
+                            d.value > 2 ? '#f59e0b' : '#ef4444'
+                    }
+                })),
+                label: {
+                    show: true,
+                    position: 'top',
+                    formatter: function(params) {
+                        return params.value ? params.value.toFixed(2) + ':1' : '∞';
+                    }
+                }
+            }]
+        };
+
+        profitabilityChart.setOption(profitabilityOption);
+
+        // 响应式处理
+        window.addEventListener('resize', function() {
+            costBenefitChart.resize();
+            profitabilityChart.resize();
+        });
+    </script>
+</body>
+</html>

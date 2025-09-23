@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地区价值分层分析</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body class="slide-page">
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">地区价值分层分析</h1>
+            <p class="slide-subtitle">价值排名与生命周期评估</p>
+        </div>
+        <div class="slide-content two-column">
+            <div class="content-section">
+                <h2 class="section-title">价值得分排名</h2>
+                <div id="valueRankingChart" class="chart-container"></div>
+            </div>
+            <div class="content-section">
+                <h2 class="section-title">关键洞察</h2>
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <h3>价值领先地区</h3>
+                        <p>辽宁以35.36分位居榜首，显著高于其他地区</p>
+                    </div>
+                    <div class="insight-card">
+                        <h3>问题地区特征</h3>
+                        <p>所有地区均被归类为"问题地区"，表明整体市场成熟度较低</p>
+                    </div>
+                    <div class="insight-card">
+                        <h3>生命周期分布</h3>
+                        <p>51.5%的地区处于新兴期，市场潜力巨大但风险并存</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 地区价值排名图表
+        const valueRankingChart = echarts.init(document.getElementById('valueRankingChart'));
+
+        const geoValueData = [
+            {name: '辽宁', value: 35.36},
+            {name: '甘肃', value: -60.27},
+            {name: '安徽', value: -131.78},
+            {name: '江西', value: -132.91},
+            {name: '广西', value: -311.76},
+            {name: '贵州', value: -348.86},
+            {name: '海南', value: -364.42},
+            {name: '宁夏', value: -438.47},
+            {name: '新疆', value: -449.16},
+            {name: '湖南', value: -534.34},
+            {name: '福建', value: -550.73},
+            {name: '四川', value: -578.01},
+            {name: '山东', value: -592.2},
+            {name: '澳门', value: -593.41},
+            {name: '上海', value: -650.08}
+        ];
+
+        const valueRankingOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                top: '10%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'value',
+                name: '价值得分',
+                nameLocation: 'middle',
+                nameGap: 30
+            },
+            yAxis: {
+                type: 'category',
+                data: geoValueData.map(item => item.name).reverse(),
+                axisLabel: {
+                    interval: 0
+                }
+            },
+            series: [{
+                name: '价值得分',
+                type: 'bar',
+                data: geoValueData.map(item => item.value).reverse(),
+                itemStyle: {
+                    color: function(params) {
+                        return params.value > 0 ? '#10b981' : '#ef4444';
+                    }
+                }
+            }]
+        };
+
+        valueRankingChart.setOption(valueRankingOption);
+
+        // 响应式处理
+        window.addEventListener('resize', function() {
+            valueRankingChart.resize();
+        });
+    </script>
+</body>
+</html>

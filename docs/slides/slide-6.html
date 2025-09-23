@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地区效果差异 - 各地区优惠券效果对比</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body class="slide-page">
+    <div class="slide">
+        <div class="slide-header">
+            <h1 class="slide-title">地区效果差异</h1>
+            <p class="slide-subtitle">各地区优惠券ROI效果对比分析</p>
+        </div>
+
+        <div class="slide-content">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div class="content-section">
+                    <h2 class="section-title">各地区平均ROI排名</h2>
+                    <div class="chart-container" id="regionROIChart" style="height: 350px;"></div>
+                </div>
+
+                <div class="content-section">
+                    <h2 class="section-title">优惠券类型地区表现</h2>
+                    <div class="chart-container" id="couponRegionChart" style="height: 350px;"></div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h3 class="section-title">地区洞察</h3>
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <div class="insight-icon">🏆</div>
+                        <div class="insight-content">
+                            <h4>四川地区ROI表现突出</h4>
+                            <p>平均ROI达835.9%，主要得益于高价值订单和相对较低的退款率</p>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">📍</div>
+                        <div class="insight-content">
+                            <h4>一线城市表现分化</h4>
+                            <p>北京、上海ROI较高，但广东地区ROI相对较低，需针对性优化</p>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">🎯</div>
+                        <div class="insight-content">
+                            <h4>地区策略建议</h4>
+                            <p>高ROI地区可加大投入，低ROI地区需调整优惠券门槛和力度</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 各地区平均ROI排名图表
+        const regionROIChart = echarts.init(document.getElementById('regionROIChart'));
+
+        const regionData = [
+            { name: '四川', roi: 835.9, orders: 12 },
+            { name: '山西', roi: 618.2, orders: 13 },
+            { name: '北京', roi: 576.6, orders: 37 },
+            { name: '江西', roi: 410.4, orders: 9 },
+            { name: '贵州', roi: 405.9, orders: 9 },
+            { name: '河北', roi: 377.8, orders: 8 },
+            { name: '山东', roi: 325.5, orders: 27 },
+            { name: '陕西', roi: 289.8, orders: 5 },
+            { name: '上海', roi: 272.9, orders: 42 },
+            { name: '湖南', roi: 271.5, orders: 13 },
+            { name: '福建', roi: 258.1, orders: 33 },
+            { name: '辽宁', roi: 244.7, orders: 16 },
+            { name: '江苏', roi: 221.6, orders: 33 },
+            { name: '安徽', roi: 227.6, orders: 5 },
+            { name: '广西', roi: 251.7, orders: 6 },
+            { name: '甘肃', roi: 259.4, orders: 5 },
+            { name: '浙江', roi: 177.0, orders: 29 },
+            { name: '广东', roi: 135.7, orders: 26 }
+        ];
+
+        const regionROIOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                },
+                formatter: function(params) {
+                    const data = params[0];
+                    const region = regionData.find(d => d.name === data.name);
+                    return `<div style="padding: 10px;">
+                        <strong>${data.name}</strong><br/>
+                        平均ROI: ${data.value}%<br/>
+                        有效订单数: ${region.orders}单
+                    </div>`;
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'value',
+                name: 'ROI (%)'
+            },
+            yAxis: {
+                type: 'category',
+                data: regionData.sort((a, b) => a.roi - b.roi).map(d => d.name),
+                axisLabel: {
+                    interval: 0
+                }
+            },
+            series: [{
+                name: 'ROI',
+                type: 'bar',
+                data: regionData.sort((a, b) => a.roi - b.roi).map(d => ({
+                    value: d.roi,
+                    itemStyle: {
+                        color: d.roi > 500 ? '#10b981' :
+                               d.roi > 300 ? '#f59e0b' :
+                               d.roi > 200 ? '#f97316' : '#ef4444'
+                    }
+                })),
+                label: {
+                    show: true,
+                    position: 'right',
+                    formatter: '{c}%'
+                }
+            }]
+        };
+
+        regionROIChart.setOption(regionROIOption);
+
+        // 优惠券类型地区表现图表
+        const couponRegionChart = echarts.init(document.getElementById('couponRegionChart'));
+
+        const topRegions = ['四川', '山西', '北京', '上海', '广东'];
+        const couponTypes = ['满100减10', '免邮券', '全场8折', '新人专享券'];
+
+        const regionCouponData = {
+            '满100减10': [2707.1, 770.4, 687.2, 451.1, 449.8],
+            '免邮券': [705.7, 867.1, 1087.9, 605.6, 142.7],
+            '全场8折': [615.0, 94.7, 256.6, 69.8, 68.9],
+            '新人专享券': [151.8, 480.3, 316.8, 240.7, 65.5]
+        };
+
+        const couponRegionOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                data: couponTypes
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: topRegions
+            },
+            yAxis: {
+                type: 'value',
+                name: 'ROI (%)'
+            },
+            series: couponTypes.map(type => ({
+                name: type,
+                type: 'bar',
+                data: regionCouponData[type],
+                emphasis: {
+                    focus: 'series'
+                }
+            }))
+        };
+
+        couponRegionChart.setOption(couponRegionOption);
+
+        // 响应式处理
+        window.addEventListener('resize', function() {
+            regionROIChart.resize();
+            couponRegionChart.resize();
+        });
+    </script>
+</body>
+</html>
